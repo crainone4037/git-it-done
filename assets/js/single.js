@@ -1,5 +1,6 @@
 
 var issueContainerEl = document.querySelector("#issues-container");
+var limitWarningEl = document.querySelector("#limit-warning");
 
 var getRepoIssues = function(repo) {
 
@@ -22,6 +23,10 @@ fetch(apiURL).then(function(response){
     if (response.ok){ 
         response.json().then(function(data){
             displayIssues(data);
+
+            if (response.headers.get("link")) {
+                displayWarning(repo);
+            }
         });
     }
     else{ 
@@ -36,7 +41,7 @@ var displayIssues = function(issues){
     if(issues.length === 0){
         issueContainerEl.textContent = "this repo has no open issues!";
         return;
-        
+
     }
 
     for(var i = 0; i < issues.length; i++){
@@ -73,6 +78,19 @@ var displayIssues = function(issues){
 
 
 };
+
+var displayWarning = function(repo) {
+    limitWarningEl.textContent = "To see more than 30 visits, visit ";
+    var linkEl = document.createElement("a");
+    linkEl.setAttribute("href,https://github.com/" + repo + "/issues");
+    linkEl.setAttribute("target", "_blank");
+
+
+limitWarningEl.appendChild(linkEl);
+
+};
+
+
 
 
 
